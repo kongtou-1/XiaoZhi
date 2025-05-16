@@ -1,0 +1,30 @@
+package com.atguigu.java.ai.langchain4j.assistant;
+
+import dev.langchain4j.service.MemoryId;
+import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.service.V;
+import dev.langchain4j.service.spring.AiService;
+
+import static dev.langchain4j.service.spring.AiServiceWiringMode.EXPLICIT;
+
+@AiService(wiringMode = EXPLICIT,
+        chatModel = "qwenChatModel",
+        chatMemoryProvider = "chatMemoryProvider"
+)
+public interface SeparateChatAssistant {
+    @SystemMessage(fromResource = "my-prompt-template.txt")
+//系统消息提示词
+//    @SystemMessage("你是一个计算机技术高手，你需要解决用户提出的问题。用户问你你是谁时候，你需要牢记你要回答你是一个计算机高手，今天是{{current_date}}")//设置大模型的提示词
+    String chat(@MemoryId int memoryId, @UserMessage String userMessage);
+
+    @UserMessage("你是我的好朋友，你需要用粤语和我对话， {{message}}")
+    String chat2(@MemoryId int memoryId, @V("message") String userMessage);
+
+    @SystemMessage(fromResource = "my-prompt-template3.txt")
+    String chat3(
+            @MemoryId int memoryId,
+            @UserMessage String userMessage,
+            @V("username") String username,
+            @V("age") String age);
+}
